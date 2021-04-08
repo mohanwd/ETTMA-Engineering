@@ -4,6 +4,8 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 from zipfile import ZipFile
+from db_helper import db_helper
+import os
 
 base_url = "https://www.eia.gov/electricity/data/eia923/"
 current_date = date.today()
@@ -43,5 +45,14 @@ def write_files_to_destination(initial_year, current_year):
     return "Files Creation Completed"
 
 
+def insert_data():
+    file_location = 'C:\\extracted'
+    for filename in os.scandir(file_location):
+        if filename.is_file():
+            bulk_insert = db_helper(filename.path, 'SUDHISH-LAPTOP\\SQLEXPRESS', 'Sample', 'Test')
+    return bulk_insert
+
+
 print(download_and_unzip_files(base_url))
 print(write_files_to_destination(initial_year, current_year))
+print(insert_data())
